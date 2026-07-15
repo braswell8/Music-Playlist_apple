@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.2)
 project(untitled)
 
 set(CMAKE_CXX_STANDARD 20)
-
+include_directories()
 
 add_executable(untitled main.cpp
         playlist_linked_list.cpp
@@ -13,8 +13,8 @@ add_executable(untitled main.cpp
 add_custom_command(
         TARGET untitled POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/Library-simple.csv
-        ${CMAKE_BINARY_DIR}/Library-simple.csv
+        ${CMAKE_SOURCE_DIR}/Library-Genre.csv
+        ${CMAKE_BINARY_DIR}/Library-Genre.csv
 )
 
 find_package(CURL REQUIRED)

@@ -6,9 +6,10 @@ using namespace std;
 #include <fstream>
 #include <vector>
 #include <filesystem>
+#include <iomanip> //MB added
 
 vector<Song> readInCSV(const string& filename) {
-    cout << "Happy Boy" << endl;
+    cout << "Opening CSV" << filename << endl;
     vector<Song> Songs;
     ifstream file(filename);
     cout << std::filesystem::current_path() << endl;
@@ -19,17 +20,24 @@ vector<Song> readInCSV(const string& filename) {
     }
     else
     {
-        cout << "Reading file" << endl;
+        cout << "Working Directory: " <<filesystem::current_path() << endl;
+        cout << "Opening file" << endl;
     }
+
+
 
     string line;
     getline(file, line);
 
     cout << line << endl;
 
-
     while (getline(file, line)) {
         if (line.empty()) continue;
+
+        // strip trailing \r if present (Windows-style line endings)
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
 
         stringstream ss(line);
         string title, artist, durationInSeconds, genre;
@@ -76,9 +84,17 @@ int main() {
                 myList.reversePlaylist();
                 break;
             case 7: {
-                vector<Song> library = readInCSV("Library-simple.csv");
+                vector<Song> library = readInCSV("Library-Genre.csv");
                 for (const auto& song : library) {
-                    cout << " " << song.title << "-" << song.artist << " (" << song.durationInSeconds << "s)[" << song.genre << "[\n";
+                    cout << " " << song.title << "-" << song.artist << " (" << song.durationInSeconds << "s) [" << song.genre << "]\n";
+                }
+                for (const auto& song : library) {
+                    cout << left
+                         << setw(30) << song.title
+                         << setw(20) << song.artist
+                         << setw(10) << song.durationInSeconds
+                         << setw(10) << song.genre
+                         << endl;
                 }
                 break;
             }
