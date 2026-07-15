@@ -7,6 +7,8 @@
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 using json = nlohmann::json;
 using namespace std;
@@ -27,14 +29,17 @@ void playlist_linked_list::addSong() {
     cout << "What song would you like to add to your playlist?" << endl;
     getline(cin, song);
 
+
     cout << "Enter the name of the artist" << endl;
     getline(cin, artist);
 
     cout << "Enter the length in seconds of the song" << endl;
     cin >> songLength;
 
-    cout << "Enter the length in seconds of the song" << endl;
-    cin >> genre;
+    cin.ignore();
+
+    cout << "Enter the genre of the song" << endl;
+    getline(cin, genre);
 
     Song* newSong = new Song(song, artist, songLength, genre);
     if (head == nullptr) {
@@ -134,7 +139,7 @@ void playlist_linked_list::moveSong() {
 
 }
 void playlist_linked_list::playSong() {
-    string songName;
+    string songName; /*
     cin.ignore();
     cout << "What song would you like to play from your playlist below?" << endl;
     Song* current = head;
@@ -142,7 +147,7 @@ void playlist_linked_list::playSong() {
         cout << current->title << " " << current->artist << " " << current->durationInSeconds << endl;
         current = current->next;
     }
-
+    */
     getline(cin, songName);
 
     // Build the search URL, replacing spaces with '+' for a valid URL
@@ -195,11 +200,93 @@ void playlist_linked_list::playSong() {
 
     string command = "open \"https://www.youtube.com/results?search_query=" + query + "\"";
     system(command.c_str());*/
-
-
 }
+    void playlist_linked_list::printPlaylist() {
+        Song* current = head;
+        while (current != nullptr) {
+            cout << setw(30) << current->title << setw(20) << current->artist << endl;
+            current = current->next;
+        }
+    }
+
+
 
 playlist_linked_list::playlist_linked_list() {
     head = nullptr;
+
+}
+
+
+
+vector<Song> playlist_linked_list::readInCSV(const string& filename) {
+    cout << "Opening CSV" << filename << endl;
+    vector<Song> Songs;
+    ifstream file(filename);
+    cout << filesystem::current_path() << endl;
+
+    if (!file.is_open()) {
+        cout << "Could not open file" << endl;
+        return Songs;
+    }
+    else
+    {
+        cout << "Working Directory: " << filesystem::current_path() << endl;
+        cout << "Opening file" << endl;
+    }
+
+
+
+    string line;
+    getline(file, line);
+
+    cout << line << endl;
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
+
+        stringstream ss(line);
+        string title, artist, durationInSeconds, genre;
+
+        getline(ss, title, ',');
+        getline(ss, artist, ',');
+        getline(ss, durationInSeconds, ',');
+        getline(ss, genre, ',');
+        cout << title;
+
+        int duration = stoi(durationInSeconds);
+
+        Songs.push_back(Song(title, artist, duration, genre));
+    }
+    file.close();
+    return Songs;
+}
+
+void playlist_linked_list::printLibrary(const vector<Song>& Songs) {
+
+    if (Songs.empty()) {
+        cout << "No songs to display." << endl;
+        return;
+    }
+    cout << left
+         << setw(30) << "Title"
+         << setw(20) << "Artist"
+         << setw(10) << "Duration"
+         << setw(10) << "Genre"
+         << endl;
+
+    for (const auto& Song : Songs) {
+        cout << left
+             << setw(30) << Song.title
+             << setw(20) << Song.artist
+             << setw(10) << Song.durationInSeconds
+             << setw(10) << Song.genre
+             << endl;
+    }
+
+
 
 }

@@ -8,61 +8,16 @@ using namespace std;
 #include <filesystem>
 #include <iomanip> //MB added
 
-vector<Song> readInCSV(const string& filename) {
-    cout << "Opening CSV" << filename << endl;
-    vector<Song> Songs;
-    ifstream file(filename);
-    cout << std::filesystem::current_path() << endl;
-
-    if (!file.is_open()) {
-        cout << "Could not open file" << endl;
-        return Songs;
-    }
-    else
-    {
-        cout << "Working Directory: " <<filesystem::current_path() << endl;
-        cout << "Opening file" << endl;
-    }
-
-
-
-    string line;
-    getline(file, line);
-
-    cout << line << endl;
-
-    while (getline(file, line)) {
-        if (line.empty()) continue;
-
-        // strip trailing \r if present (Windows-style line endings)
-        if (!line.empty() && line.back() == '\r') {
-            line.pop_back();
-        }
-
-        stringstream ss(line);
-        string title, artist, durationInSeconds, genre;
-
-        getline(ss, title, ',');
-        getline(ss, artist, ',');
-        getline(ss, durationInSeconds, ',');
-        getline(ss, genre, ',');
-        cout << title;
-
-        int duration = stoi(durationInSeconds);
-
-        Songs.push_back(Song(title, artist, duration, genre));
-    }
-    file.close();
-    return Songs;
-}
-
 int main() {
     cout << "Hello User, Welcome to CBeats, pick a number from the library below to select a command" << endl;
     int num = 0;
     playlist_linked_list myList;
-    while(num != 6){
+    playlist_linked_list playlist;
+    vector<Song> library = playlist.readInCSV("Library-Genre.csv");
+
+    while(num != 6) {
         cout << "Select a number, if you want to erase your library/stop enter the number 8" << endl;
-        cout << "1. addSong 2. removeSong 3. shufflePlaylist 4. playsong 5. moveSong 6. reversePlaylist 7. print playlist" << endl;
+        cout << "1. addSong 2. removeSong 3. shufflePlaylist 4. playsong 5. moveSong 6. reversePlaylist 7. print automated CBeats library" << endl;
         cin >> num;
         switch (num){
             case 1:
@@ -75,8 +30,24 @@ int main() {
                 myList.shufflePlaylist();
                 break;
             case 4:
+                {
+                string yn;
+                cout << "If you would like to access the CBeats automated playlist type 'yes', if you would like to access your own type 'no'" << endl;
+                cin.ignore();
+                getline(cin, yn);
+                if (yn == "yes") {
+                    playlist.printLibrary(library);
+                } else if (yn == "no") {
+                    myList.printPlaylist();
+                }
+                else {
+                    cout << "statement not valid" << endl;
+                    break;
+                }
+                cout << "Pick a song from above:" << endl;
                 myList.playSong();
                 break;
+        }
             case 5:
                 myList.moveSong();
                 break;
@@ -84,18 +55,7 @@ int main() {
                 myList.reversePlaylist();
                 break;
             case 7: {
-                vector<Song> library = readInCSV("Library-Genre.csv");
-                for (const auto& song : library) {
-                    cout << " " << song.title << "-" << song.artist << " (" << song.durationInSeconds << "s) [" << song.genre << "]\n";
-                }
-                for (const auto& song : library) {
-                    cout << left
-                         << setw(30) << song.title
-                         << setw(20) << song.artist
-                         << setw(10) << song.durationInSeconds
-                         << setw(10) << song.genre
-                         << endl;
-                }
+                playlist.printLibrary(library);
                 break;
             }
             default:

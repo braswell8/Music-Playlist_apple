@@ -22,11 +22,12 @@ class playlist_linked_list {
     void moveSong();
     void reversePlaylist();
     void playSong();
+    void printPlaylist();
+    vector<Song> readInCSV(const string& filename);
+    void printLibrary(const vector<Song>& Songs);
 
 
-
-
-    //static void addToQueue();
+        //static void addToQueue();
     //void playPreviousSong();
 
 };
