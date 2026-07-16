@@ -5,7 +5,9 @@
 #include "Song.h"
 using namespace std;
 
+//Song::Song(int i, string t, string a, int d, string g) {
 Song::Song(string t, string a, int d, string g) {
+    //item = i;
     title = t;
     artist = a;
     durationInSeconds = d;

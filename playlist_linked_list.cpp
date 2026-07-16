@@ -19,16 +19,15 @@ size_t playlist_linked_list::WriteCallback(void* contents, size_t size, size_t n
 }
 
 void playlist_linked_list::addSong() {
+    int item=0;
     string song;
     string artist;
     int songLength;
     string genre;
 
-    cin.ignore();
-
+    cin.ignore(); // clear input buffer
     cout << "What song would you like to add to your playlist?" << endl;
     getline(cin, song);
-
 
     cout << "Enter the name of the artist" << endl;
     getline(cin, artist);
@@ -36,8 +35,7 @@ void playlist_linked_list::addSong() {
     cout << "Enter the length in seconds of the song" << endl;
     cin >> songLength;
 
-    cin.ignore();
-
+    cin.ignore(); // clear input buffer after cin songLength
     cout << "Enter the genre of the song" << endl;
     getline(cin, genre);
 
@@ -61,10 +59,11 @@ void playlist_linked_list::addSong() {
 void playlist_linked_list::removeSong() {
     string song;
 
-    cin.ignore();
 
     cout << "What song would you like to remove?" << endl;
+
     getline(cin, song);
+
     if (head == nullptr) {
         cout << "Playlist is empty" << endl;
         return;
@@ -110,36 +109,43 @@ void playlist_linked_list::shufflePlaylist() {
 */
 
 void playlist_linked_list::reversePlaylist() {
-    int count = 0;
     string song;
     Song* current = head;
+    Song* tail;
+    string temp;
     if (head == nullptr) {
         cout << "Playlist is empty" << endl;
         return;
     }
-    while (current->next != nullptr) {
-        count++;
+  //  /*
+
+    while (current != nullptr) {
+        song = current->title;
+        cout << song << " " << endl;
+        tail = current;
         current = current->next;
     }
-    song = current->title;
-    cout << song << " " << count << endl;
-    count--;
+    cout<< "Reversing Playlist now:" << endl;
+    current = tail;
 
-    while (current != head) {
+    while (current != nullptr) {
         song = current->title;
-        cout << song << " " << count << endl;
-        count--;
+        cout << song << " " << endl;
         current = current->prev;
     }
-    song = head->title;
-    cout << song << endl;
+
 }
 
 void playlist_linked_list::moveSong() {
 
 }
-void playlist_linked_list::playSong() {
-    string songName; /*
+
+//void playlist_linked_list::playSong(const string songToPlay,  vector<Song> & library) {
+void playlist_linked_list::playSong(vector<Song>& library) {
+
+    string songToPlay;
+
+    /*
     cin.ignore();
     cout << "What song would you like to play from your playlist below?" << endl;
     Song* current = head;
@@ -148,10 +154,33 @@ void playlist_linked_list::playSong() {
         current = current->next;
     }
     */
-    getline(cin, songName);
+    //getline(cin, songName);
+   // songName = playList[25].title;
+
+    string yn;
+    cout << "If you would like to access the CBeats automated playlist type 'yes', if you would like to access your own type 'no'" << endl;
+    cin.ignore();
+    getline(cin, yn);
+
+    if (yn == "yes") {
+        //CBeatslist.printLibrary(library);
+        printLibrary(library);
+    } else if (yn == "no") {
+        //myList.printPlaylist();
+        printPlaylist();
+    }
+    else {
+        cout << "statement not valid" << endl;
+        return;
+    }
+    cout << "Pick a song from above:" << endl;
+    getline(cin, songToPlay);
+    //songToPlay = playSong[25].title;
+
+
 
     // Build the search URL, replacing spaces with '+' for a valid URL
-    string query = songName;
+    string query = songToPlay;
     for (auto& c : query) if (c == ' ') c = '+';
     string url = "https://itunes.apple.com/search?term=" + query + "&entity=song&limit=1";
 
@@ -180,7 +209,7 @@ void playlist_linked_list::playSong() {
         }
 
         if (data["results"].empty()) {
-            cout << "No results found for \"" << songName << "\"." << endl;
+            cout << "No results found for \"" << songToPlay << "\"." << endl;
             return;
         }
 
@@ -219,10 +248,11 @@ playlist_linked_list::playlist_linked_list() {
 
 
 vector<Song> playlist_linked_list::readInCSV(const string& filename) {
-    cout << "Opening CSV" << filename << endl;
+
+    int item =1; // index counter for each song in library
+
     vector<Song> Songs;
     ifstream file(filename);
-    cout << filesystem::current_path() << endl;
 
     if (!file.is_open()) {
         cout << "Could not open file" << endl;
@@ -232,14 +262,16 @@ vector<Song> playlist_linked_list::readInCSV(const string& filename) {
     {
         cout << "Working Directory: " << filesystem::current_path() << endl;
         cout << "Opening file" << endl;
-    }
+        //cout << "Opening CSV" << filename << endl;
+        cout << filesystem::current_path() << endl;
 
+    }
 
 
     string line;
     getline(file, line);
 
-    cout << line << endl;
+    //cout << line << endl; // debug line, display file contents; unparsed
 
     while (getline(file, line)) {
         if (line.empty()) continue;
@@ -255,11 +287,12 @@ vector<Song> playlist_linked_list::readInCSV(const string& filename) {
         getline(ss, artist, ',');
         getline(ss, durationInSeconds, ',');
         getline(ss, genre, ',');
-        cout << title;
+        //cout << title;
 
         int duration = stoi(durationInSeconds);
 
         Songs.push_back(Song(title, artist, duration, genre));
+        item++;
     }
     file.close();
     return Songs;
@@ -272,6 +305,7 @@ void playlist_linked_list::printLibrary(const vector<Song>& Songs) {
         return;
     }
     cout << left
+         //<< setw(10) << "Index"
          << setw(30) << "Title"
          << setw(20) << "Artist"
          << setw(10) << "Duration"
@@ -280,6 +314,7 @@ void playlist_linked_list::printLibrary(const vector<Song>& Songs) {
 
     for (const auto& Song : Songs) {
         cout << left
+            //<< setw(10) << Song.item
              << setw(30) << Song.title
              << setw(20) << Song.artist
              << setw(10) << Song.durationInSeconds

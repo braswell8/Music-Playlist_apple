@@ -6,14 +6,21 @@ using namespace std;
 #include <fstream>
 #include <vector>
 #include <filesystem>
-#include <iomanip> //MB added
+#include <iomanip> //MB added to allow screen formatting
 
 int main() {
-    cout << "Hello User, Welcome to CBeats, pick a number from the library below to select a command" << endl;
+
     int num = 0;
+    string songToPlay;
     playlist_linked_list myList;
-    playlist_linked_list playlist;
-    vector<Song> library = playlist.readInCSV("Library-Genre.csv");
+   playlist_linked_list CBeatslist;
+   vector<Song> library = CBeatslist.readInCSV("Library-Genre.csv");
+
+
+    cout << endl << endl;
+    cout << "Hello User, Welcome to CBeats, pick a number from the options below to select a command" << endl;
+    cout << endl << endl;
+
 
     while(num != 6) {
         cout << "Select a number, if you want to erase your library/stop enter the number 8" << endl;
@@ -31,23 +38,9 @@ int main() {
                 break;
             case 4:
                 {
-                string yn;
-                cout << "If you would like to access the CBeats automated playlist type 'yes', if you would like to access your own type 'no'" << endl;
-                cin.ignore();
-                getline(cin, yn);
-                if (yn == "yes") {
-                    playlist.printLibrary(library);
-                } else if (yn == "no") {
-                    myList.printPlaylist();
-                }
-                else {
-                    cout << "statement not valid" << endl;
-                    break;
-                }
-                cout << "Pick a song from above:" << endl;
-                myList.playSong();
+                myList.playSong( library);
                 break;
-        }
+            }
             case 5:
                 myList.moveSong();
                 break;
@@ -55,7 +48,7 @@ int main() {
                 myList.reversePlaylist();
                 break;
             case 7: {
-                playlist.printLibrary(library);
+                CBeatslist.printLibrary(library);
                 break;
             }
             default:
