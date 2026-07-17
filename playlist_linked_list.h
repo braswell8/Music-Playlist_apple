@@ -26,6 +26,8 @@ class playlist_linked_list {
     void printPlaylist();
     vector <Song> readInCSV(const string& filename);
     void printLibrary(const vector<Song>& Songs);
+    void saveData(string filename);
+    void loadData(string filename);
 
     //static void addToQueue();
     //void playPreviousSong();

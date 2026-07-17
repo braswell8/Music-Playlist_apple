@@ -24,18 +24,18 @@ void playlist_linked_list::addSong() {
     string artist;
     int songLength;
     string genre;
-
-    cin.ignore(); // clear input buffer
+    cin.ignore();
     cout << "What song would you like to add to your playlist?" << endl;
     getline(cin, song);
 
     cout << "Enter the name of the artist" << endl;
     getline(cin, artist);
 
-    cout << "Enter the length in seconds of the song" << endl;
+    cout << "Enter the length of the song" << endl;
     cin >> songLength;
 
-    cin.ignore(); // clear input buffer after cin songLength
+    cin.ignore();
+
     cout << "Enter the genre of the song" << endl;
     getline(cin, genre);
 
@@ -137,7 +137,64 @@ void playlist_linked_list::reversePlaylist() {
 }
 
 void playlist_linked_list::moveSong() {
+    string songName;
+    string songNamePrev;
+    Song* current = head;
+    cin.ignore();
+    cout << "What song would you like to move?" << endl;
+    getline(cin, songName);
+    cout << "What song would you like to move it after?" << endl;
+    getline(cin, songNamePrev);
 
+    if (head == nullptr) {
+        cout << "Playlist is empty" << endl;
+        return;
+    }
+    while (current != nullptr && current->title != songName) {
+        current = current->next;
+        }
+
+    if (current == nullptr) {
+            cout << "Song not found" << endl;
+            return;
+    }
+    Song* temp = current;
+
+    if (temp == head) {
+        head = temp->next;
+        if (head != nullptr) {
+            head->prev = nullptr;
+        }
+    } else {
+        temp->prev->next = temp->next;
+        if (temp->next != nullptr) {
+            temp->next->prev = temp->prev;
+        }
+    }
+
+    temp->next = nullptr;
+    temp->prev = nullptr;
+
+
+
+
+    current = head;
+    while (current != nullptr && current->title != songNamePrev) {
+        current = current->next;
+    }
+        if (current == nullptr) {
+            cout << "Song  not found" << endl;
+            return;
+        }
+    Song* afterInsertPoint = current->next; // save before overwriting
+
+    temp->next = afterInsertPoint;
+    temp->prev = current;
+
+    if (afterInsertPoint != nullptr) {
+        afterInsertPoint->prev = temp;
+    }
+    current->next = temp;
 }
 
 //void playlist_linked_list::playSong(const string songToPlay,  vector<Song> & library) {
@@ -233,7 +290,7 @@ void playlist_linked_list::playSong(vector<Song>& library) {
     void playlist_linked_list::printPlaylist() {
         Song* current = head;
         while (current != nullptr) {
-            cout << setw(30) << current->title << setw(20) << current->artist << endl;
+            cout << left << setw(30) << current->title << left << setw(20) << current->artist << endl;
             current = current->next;
         }
     }
@@ -324,4 +381,29 @@ void playlist_linked_list::printLibrary(const vector<Song>& Songs) {
 
 
 
+}
+
+void playlist_linked_list::saveData(string filename) {
+   ofstream file(filename);
+    Song* current = head;
+    while (current != nullptr) {
+        file << left << setw(20) << current->title << "," << left << setw(15) << current->artist << endl;
+        current = current->next;
+    }
+    file.close();
+}
+
+void playlist_linked_list::loadData(string filename) {
+    ifstream file(filename);
+    string line;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string title, artist;
+        getline(ss, title, ',');
+        getline(ss, artist, ',');
+
+        addSong();
+
+    }
 }
