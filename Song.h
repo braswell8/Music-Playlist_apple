@@ -11,14 +11,11 @@ using namespace std;
 class Song {
 public:
 
-    //int item;
     string title;
     string artist;
-    int durationInSeconds;
-    string genre;
 
- //   Song(int i, string t, string a, int d, string g);
-    Song(string t, string a, int d, string g);
+
+    Song(string t, string a);
 
 
     Song* next;

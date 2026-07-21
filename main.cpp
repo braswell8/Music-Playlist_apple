@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include "playlist_linked_list.h"
 using namespace std;
 #include <string>
@@ -23,32 +23,45 @@ int main() {
 
     while(num != 6) {
         cout << "Select a number, if you want to erase your library/stop enter the number 9" << endl;
-        cout << "1. addSong 2. removeSong 3. shufflePlaylist 4. playsong 5. moveSong 6. reversePlaylist 7. print automated CBeats library, 8. printYourPlaylist, 9. exit program" << endl;
+        cout << "1. addSong " << endl;
+        cout << "2. removeSong " << endl;
+        cout << "3. shufflePlaylist " << endl;
+        cout << "4. playSong " << endl;
+        cout << "5. moveSong " << endl;
+        cout << "6. reversePlaylist " << endl;
+        cout << "7. print automated CBEATS library " << endl;
+        cout << "8. printPlaylist " << endl;
+        cout << "9. exit" << endl;
+
         cin >> num;
         if (num >= 1 && num <= 9) {
             switch (num){
-                case 1:
-
+                case 1: {
                     myList.addSong();
                     break;
-                case 2:
+                }
+                case 2: {
                     myList.removeSong();
                     break;
-                case 3:
+                }
+                case 3: {
                     myList.shufflePlaylist();
                     break;
+                }
                 case 4:
                 {
                     myList.playSong(library);
                     break;
                 }
-                case 5:
+                case 5: {
                     myList.printPlaylist();
                     myList.moveSong();
                     break;
-                case 6:
+                }
+                case 6: {
                     myList.reversePlaylist();
                     break;
+                }
                 case 7: {
                     CBeatslist.printLibrary(library);
                     break;
@@ -71,4 +84,16 @@ int main() {
         }
     }
     return 0;
+}
+*/
+#include "mainwindow.h"
+#include <QApplication>
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    MainWindow window;
+    window.show();
+
+    return app.exec();
 }

@@ -5,13 +5,14 @@
 #include "Song.h"
 using namespace std;
 
-//Song::Song(int i, string t, string a, int d, string g) {
-Song::Song(string t, string a, int d, string g) {
-    //item = i;
+
+Song::Song(string t, string a) {
+
     title = t;
     artist = a;
-    durationInSeconds = d;
+
+
     next = nullptr;
     prev = nullptr;
-    genre = g;
+
 }
