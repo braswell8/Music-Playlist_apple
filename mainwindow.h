@@ -32,6 +32,8 @@ private slots:
     void on_PlaySongButton_clicked();
     void on_RSongButton_clicked();
     //void on_MoveSongButton_clicked();
+    void on_LibrarySearchBar_textChanged(const QString &text);
+    void on_PlaylistSearchBar_textChanged(const QString &text);
 
 
 private:

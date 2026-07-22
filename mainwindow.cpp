@@ -71,6 +71,29 @@ void MainWindow::on_RSongButton_clicked() {
     ui->PlayList->takeItem(row);
     delete selectedSong;
 }
+void MainWindow::on_LibrarySearchBar_textChanged(const QString &text) {
+    ui->LibraryList->clear();
+
+    for (const Song& song : library)
+    {
+        QString title = QString::fromStdString(song.title);
+
+        if (title.contains(text, Qt::CaseInsensitive))
+        {
+            ui->LibraryList->addItem(title);
+        }
+    }
+}
+void MainWindow::on_PlaylistSearchBar_textChanged(const QString &text) {
+    ui->PlayList->clear();
+    for (const Song& song : library) {
+        QString title = QString::fromStdString(song.title);
+        if (title.contains(text, Qt::CaseInsensitive)) {
+            ui->PlayList->addItem(title);
+        }
+    }
+}
+
 
 /*void MainWindow::on_MoveSongButton_clicked() {
     QListWidgetItem* selectedSong = ui->PlayList->currentItem();
